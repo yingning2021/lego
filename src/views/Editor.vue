@@ -10,7 +10,12 @@
       <a-layout-content class="preview-container">
         <p>画布区域</p>
         <div class="preview-list" id="canvas-area">
-          
+          <component
+            v-for="component in components"
+            :key="component.id"
+            :is="component.name"
+            v-bind="component.props"
+            />
         </div>
       </a-layout-content>
     </a-layout>
@@ -21,10 +26,24 @@
 </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue'
+import {useStore} from 'vuex'
+import { GlobalDataProps } from '@/store'
+import { computed } from '@vue/reactivity'
+import LText from '@/components/LText.vue'
 
 export default defineComponent({
+  components: {
+    LText
+  },
+  setup() {
+    const store = useStore<GlobalDataProps>()
+    const components = computed(() => store.state.editor.components)
+    return {
+      components
+    }
+  }
 })
 </script>
 
