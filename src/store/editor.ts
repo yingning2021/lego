@@ -16,7 +16,7 @@ interface ComponentData {
 export const testComponents: ComponentData[] =  [
     {id: uuidv4(), name: 'l-text', props: {text: 'hello', fontSize: '15px', color: 'red'}},
     {id: uuidv4(), name: 'l-text', props: {text: 'hello1', fontSize : '20px', fontWeight: 'bold'}},
-    {id: uuidv4(), name: 'l-text', props: {text: 'hello2', fontSize: '25px'}},
+    {id: uuidv4(), name: 'l-text', props: {text: 'hello2', fontSize: '25px', actionType: 'url', url: 'https://www.baidu.com'}},
 ]
 
 const editor: Module<EditorProps, GlobalDataProps> = {
