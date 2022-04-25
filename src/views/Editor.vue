@@ -11,18 +11,27 @@
       <a-layout-content class="preview-container">
         <p>画布区域</p>
         <div class="preview-list" id="canvas-area">
-          <component
-            v-for="component in components"
-            :key="component.id"
-            :is="component.name"
-            v-bind="component.props"
+          <edit-wrapper
+              @setActive="setActive(component.id)"
+              v-for="component in components"
+              :key="component.id"
+              :id="component.id"
+              :active="component.id === (currentElement?.id)"
+          >
+            <component
+                :is="component.name"
+                v-bind="component.props"
             />
+          </edit-wrapper>
         </div>
       </a-layout-content>
     </a-layout>
     <a-layout-sider width="300" style="background: purple" class="settings-panel">
       组件属性
-    </a-layout-sider>  
+      <pre>
+        {{currentElement?.props}}
+      </pre>
+    </a-layout-sider>
   </a-layout>
 </div>
 </template>
@@ -35,22 +44,31 @@ import { computed } from '@vue/reactivity'
 import LText from '@/components/LText.vue'
 import ComponentsList from "@/components/ComponentsList.vue";
 import {defaultTextTemplates} from "@/defaultTemplate";
+import EditWrapper from "@/components/EditWrapper.vue";
+import { ComponentData } from '@/store/editor'
 
 export default defineComponent({
   components: {
+    EditWrapper,
     ComponentsList,
     LText
   },
   setup() {
     const store = useStore<GlobalDataProps>()
     const components = computed(() => store.state.editor.components)
+    const currentElement = computed<ComponentData | null>(() => store.getters.getCurrentElement)
     const addItem = (props: any) => {
       store.commit('addComponent', props)
+    }
+    const setActive = (id: string) => {
+      store.commit('setActive', id)
     }
     return {
       components,
       defaultTextTemplates,
-      addItem
+      addItem,
+      setActive,
+      currentElement
     }
   }
 })
